@@ -21,9 +21,10 @@ if [ -z "${SPARK_HOME}" ]; then
   source "$(dirname "$0")"/find-spark-home
 fi
 
+# .命令等于source命令。load-spark-env.sh中会定义一些spark相关的环境变量
 . "${SPARK_HOME}"/bin/load-spark-env.sh
 
-# Find the java binary
+# Find the java binary。RUNNER是java命令所在的路径
 if [ -n "${JAVA_HOME}" ]; then
   RUNNER="${JAVA_HOME}/bin/java"
 else
@@ -35,7 +36,7 @@ else
   fi
 fi
 
-# Find Spark jars.
+# Find Spark jars. 找到spark 相关jar包存放的位置
 if [ -d "${SPARK_HOME}/jars" ]; then
   SPARK_JARS_DIR="${SPARK_HOME}/jars"
 else
@@ -55,7 +56,7 @@ if [ -n "$SPARK_PREPEND_CLASSES" ]; then
   LAUNCH_CLASSPATH="${SPARK_HOME}/launcher/target/scala-$SPARK_SCALA_VERSION/classes:$LAUNCH_CLASSPATH"
 fi
 
-# For tests
+# For tests    如变量SPARK_TESTING非空，则删除YARN_CONF_DIR和HADOOP_CONF_DIR这两个变量
 if [[ -n "$SPARK_TESTING" ]]; then
   unset YARN_CONF_DIR
   unset HADOOP_CONF_DIR
@@ -73,6 +74,7 @@ build_command() {
 }
 
 # Turn off posix mode since it does not allow process substitution
+# posix是可移植操作系统接口的缩写
 set +o posix
 CMD=()
 while IFS= read -d '' -r ARG; do

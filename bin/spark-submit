@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+# 这个脚本是spark程序执行的入口
+# 如果找不到SPARK_HOME这个环境变量，就用source命令去执行find-spark-home脚本，找到SPARK_HOME这个环境变量
 if [ -z "${SPARK_HOME}" ]; then
   source "$(dirname "$0")"/find-spark-home
 fi
@@ -24,4 +26,5 @@ fi
 # disable randomized hash for string in Python 3.3+
 export PYTHONHASHSEED=0
 
+# exec命令是直接用新的进程去代替原来的进程，且进程的PID保持不变，运行完毕之后不回到原先的程序中去。
 exec "${SPARK_HOME}"/bin/spark-class org.apache.spark.deploy.SparkSubmit "$@"
